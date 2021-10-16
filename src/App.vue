@@ -1,16 +1,19 @@
 <template>
   <div id="app">
-    <Huang msg="Welcome to Your Vue.js App"/>
+  <Header></Header>
+  <router-view></router-view>
+  <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Huang from './components/Huang.vue'
-
+import Header from './components/Header'
+import Footer from './components/Footer'
 export default {
   name: 'App',
   components: {
-    Huang
+    Header,
+    Footer,
   }
 }
 </script>
