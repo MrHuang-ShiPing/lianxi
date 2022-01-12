@@ -10,10 +10,16 @@ export default[
         {
             path:'/Login',
             component:Login,
+            meta:{
+                isHideFooter:true
+            }
         },
         {
             path:'/Register',
             component:Register,
+            meta: { 
+                isHideFooter:true
+             }
         },
         {
             name:'search',
