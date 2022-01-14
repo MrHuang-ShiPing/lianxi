@@ -23,8 +23,8 @@ export default[
         },
         {
             name:'search',
-            path:'/Search/:keyWord',
+            path:'/Search/:keyWord?',
             component:Search,
-            //props:true,  //只能映射pramas参数
+            props:true,  //只能映射pramas参数
         },
 ]

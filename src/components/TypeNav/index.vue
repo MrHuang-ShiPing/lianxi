@@ -1,11 +1,17 @@
 <template>
   <div class="type-nav">
     <div class="container">
-      <div @mouseleave="hideFirst" @mouseenter="showFirst">
+      <div @mouseleave="isShowLeave" @mouseenter="isShowFirst">
         <h2 class="all">全部商品分类</h2>
         <transition name="slide">
-          <div class="sort" v-show="isShowFirst">
-            <div class="all-sort-list2" @click="toSearch">
+          <div 
+           v-show="isShowOneList"
+          class="sort">
+            <div 
+           
+            class="all-sort-list2"
+            @click="toSearch">
+             
               <div
                 class="item"
                 v-for="(c1, index) in categoryList"
@@ -72,40 +78,29 @@
 3. 在模板中动态显示
 */
 import { mapState } from "vuex";
-// import _ from 'lodash' // 打包整个库  ==> 太大了, 4M
-import throttle from "lodash/throttle" // 只引入需要的模块   ==> 减小打包文件  2.7M
-
+// import _ from 'lodash'
+import throttle from 'lodash/throttle'
 export default {
   name: "TypeNav",
 
   data() {
-    console.log('data()')
-    const path = this.$route.path
+   
     return {
-      // isShowFirst: false, // 是否显示一级列表
-      isShowFirst: path==='/',
-      currentIndex: -2 // 需要显示子列表的分类项下标
+      isShowOneList:false,
+     currentIndex: -2
     }
   },
 
-  beforeCreate() {
-    console.log('beforeCreate()')
+ 
+  created(){
+    const path = this.$route.path
+    
+    if(path==='/'){
+      this.isShowOneList=true
+    }
   },
 
-  // created () {
-  //   // 判断当前请求的是否是首页, 如果是显示一级列表
-  //   const path = this.$route.path
-  //   if (path==='/') {
-  //     this.isShowFirst = true
-  //   }
-  // },
-
-  mounted () { // 在初始显示之后更新数据 ==> 导致界面多更新一次
-    // 判断当前请求的是否是首页, 如果是显示一级列表
-    // const path = this.$route.path
-    // if (path==='/') {
-    //   this.isShowFirst = true
-    // }
+  mounted () { 
   },
 
   computed: {
@@ -120,45 +115,30 @@ export default {
   },
 
   methods: {
-
-    /* 
-    隐藏一级列表
-    */
-    hideFirst () {
-      // 标识当前已经离开了整个div
-      this.currentIndex=-2
-      // 如果当前不是首页, 隐藏一级列表
-      if (this.$route.path!=='/') {
-        this.isShowFirst = false
-      }
+    isShowLeave(){
+       this.currentIndex=-2
+       if(this.$route.path!=='/'){
+         this.isShowOneList=false
+       }
+       
     },
-
-    /* 
-    显示一级列表
-    */
-    showFirst () {
-      // 标识当前已经进入包含分类的div了
+    isShowFirst(){
       this.currentIndex=-1
-      // 保证显示一级列表
-      this.isShowFirst = true
+      this.isShowOneList=true
     },
-
-    /* 
-    显示指定下标的子分类列表
-    */
-    // showSubList: _.throttle( (index) => { // 不可以, 原因在于箭头函数没有自己的this, 且不能通过bind来指定特定this
-    // showSubList: _.throttle(function (index) { // 这个事件监听回调函数调用的频率太高
-    showSubList: throttle(function (index) { // 这个事件监听回调函数调用的频率太高
-      console.log('throttle', index)
-      // 只有当还没有离开整个分类的div时才更新下标
-      if (this.currentIndex!==-2) {
-        this.currentIndex = index;
+    // 显示子列表
+    showSubList: throttle(function(index){
+      if(this.currentIndex!==-2){
+      this.currentIndex=index
       }
-      
-    }, 50/*,  {
-      trailing: false, // 最后一次事件不延迟处理
-    } */),
+    },500
+    // ,{
+    //   leading:true,
+    //   trailing:false
+    // }
+    ),
 
+    
     /* 
     跳转到搜索
     */
@@ -209,7 +189,7 @@ export default {
        }
 
         // 隐藏一级列表
-        this.hideFirst()
+      
       }
     }
   }

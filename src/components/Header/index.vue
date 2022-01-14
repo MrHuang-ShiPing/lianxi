@@ -62,15 +62,18 @@ export default {
   },
   methods:{
       toSearch(){
-        //   this.$router.push('/search')
         // this.$router.push(`/search/${this.keyWord}`)
-        // 对象写法
-        this.$router.push({
-            name:'search',
-            params:{
-                keyword:this.keyWord
-            }
-        })
+        const location = {
+          name:'search',
+          query:this.$route.query
+        }
+        if(this.keyWord){
+          location.params = {
+            keyWord:this.keyWord
+          }
+        }
+        this.$router.push(location)
+
       }
   }
 };
