@@ -9,7 +9,7 @@
 <script>
 import Header from './components/Header'
 import Footer from './components/Footer'
-import {reqCategoryList} from './api'
+import {getCategoryList,getBannerList} from './api'
 
 export default {
   name: 'App',
@@ -20,6 +20,7 @@ export default {
   mounted(){
 
    this.$store.dispatch('getCategoryList')
+   this.$store.dispatch('getBannerList')
   }
 }
 </script>

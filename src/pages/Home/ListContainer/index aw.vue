@@ -3,19 +3,27 @@
     <div class="sortList clearfix">
       <div class="center">
         <!--banner轮播-->
-        <div class="swiper-container" ref="swiper">
+        <!-- <div class="swiper-container" ref="swiper">
           <div class="swiper-wrapper">
             <div class="swiper-slide" v-for="banner in bannerList" :key="banner.id">
               <img :src="banner.imageUrl" style="width: 100%; height:464px;"/>
             </div>
           </div>
-          <!-- 如果需要分页器 -->
+          如果需要分页器 
           <div class="swiper-pagination"></div>
           
-          <!-- 如果需要导航按钮 -->
+           如果需要导航按钮 
           <div class="swiper-button-prev"></div>
           <div class="swiper-button-next"></div>
-        </div>
+        </div> -->
+        <swiper :options="swiperOptions">
+          <swiper-slide v-for="banner in bannerList" :key="banner.id">
+            <img :src="banner.imageUrl" style="width: 100%; height:464px;"/>
+          </swiper-slide>
+          <div class="swiper-pagination" slot="pagination"></div>
+          <div class="swiper-button-prev" slot="button-prev"></div>
+          <div class="swiper-button-next" slot="button-next"></div>
+        </swiper>
         
       </div>
       <div class="right">
@@ -92,68 +100,39 @@
 </template>
 
 <script>
-import Swiper from 'swiper'
 import {mapState} from 'vuex'
 export default {
+  data () {
+    return {
+      swiperOptions: {
+        // direction: 'horizontal', // 水平切换选项
+        loop: true, // 循环模式选项
+        autoplay: { // 自动轮播
+          delay: 4000,
+          disableOnInteraction: false, // 用户操作后是否停止自动轮播
+        }, 
+        // 如果需要分页器
+        pagination: {
+          el: '.swiper-pagination',
+        },
+        // 如果需要前进后退按钮
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+      }
+    }
+  },
   name: "ListContainer",
   mounted(){
-  //   var mySwiper = new Swiper (this.$refs.swiper, {
-  //   loop: true, // 循环模式选项
-  //   autoplay: {
-  //   delay: 2000,//1秒切换一次
-  //   disableOnInteraction: false,
-  //   },
-  //   // 如果需要分页器
-  //   pagination: {
-  //     el: '.swiper-pagination',
-  //   },
-    
-  //   // 如果需要前进后退按钮
-  //   navigation: {
-  //     nextEl: '.swiper-button-next',
-  //     prevEl: '.swiper-button-prev',
-  //   },
-    
-  //   // 如果需要滚动条
-  //   scrollbar: {
-  //     el: '.swiper-scrollbar',
-  //   },
-  // })        
+  
   },
   computed: {
     ...mapState({
       bannerList : state => state.home.reqBannerList
     })
   },
-  watch:{
-    bannerList(){
-      // this.$nextTick 是在监视数据bannerList变化后,页面更新,再去调用nextTick里面的函数
-      this.$nextTick(()=>{
-        var mySwiper = new Swiper (this.$refs.swiper, {
-    loop: true, // 循环模式选项
-    autoplay: {
-    delay: 2000,//1秒切换一次
-    disableOnInteraction: false,
-    },
-    // 如果需要分页器
-    pagination: {
-      el: '.swiper-pagination',
-    },
-    
-    // 如果需要前进后退按钮
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-    
-    // 如果需要滚动条
-    scrollbar: {
-      el: '.swiper-scrollbar',
-    },
-  })        
-      })
-    }
-  }
+  
 };
 </script>
 

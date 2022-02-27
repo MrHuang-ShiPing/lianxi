@@ -80,6 +80,7 @@
 import { mapState } from "vuex";
 // import _ from 'lodash'
 import throttle from 'lodash/throttle'
+
 export default {
   name: "TypeNav",
 
