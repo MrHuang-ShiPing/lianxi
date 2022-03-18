@@ -6,6 +6,15 @@ export function reqCategoryList(){
         url:'/product/getBaseCategoryList'
     })
 }
+//搜索商品
+// /api/list   post请求
+    
+    // export const reqSearch = (searchList)=>ajax.post('/list',searchList)
+    export const reqSearch = (searchList)=>ajax.post('/list',searchList)
+
+
+
+
 // /api/cms/banner
 // 首页轮播图
 export const reqBannerList = ()=>ajax('/cms/banner')
