@@ -11,15 +11,16 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <li class="with-x" v-if="options.categoryName">{{options.categoryName}}<i @click="removeCategory">×</i></li>
+            <li class="with-x" v-if="options.trademark">{{options.trademark}}<i @click="removeTrademark">×</i></li>
+            <li class="with-x" v-for="(prop,index) in options.props" :key="prop">{{prop}}<i @click="removeProp(index)">×</i></li>
+            <li class="with-x" v-if="this.$route.params.keyword">{{this.$route.params.keyword}}<i @click="removekeyword">×</i></li>
+
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector :setTrademark='setTrademark' @addProp='addProp' />
 
         <!--details-->
         <div class="details clearfix">
@@ -137,21 +138,11 @@
        
       }
     },
-    created(){
-      
-      const {keyword} = this.$route.params
-      const {category1Id,category2Id,category3Id,categoryName} = this.$route.query
-      this.options={
-        ...this.options,
-        keyword,
-        category1Id
-        ,category2Id,
-        category3Id,
-        categoryName,
-       
-      }
-       this.$store.dispatch('getSearchList',this.options)
-    },
+    //初始化调用
+    // created(){
+    //   this.updateParams()
+    //   this.getShopList() 
+    // },
     mounted(){
 
     },
@@ -160,7 +151,103 @@
       //   goodsList:state=>state.search.searchList.goodsList
       // })
       ...mapGetters(['goodsList'])
+    },
+
+       watch: {
+      /* 
+      watch监视回调默认调用时机: 数据有变化才调用
+      如何实现初始化就调用第一次: 
+      */
+      //  $route(to, from) { // 参数变化
+      //   this.updateParams()
+      //   this.getShopList()
+      // }, 
+      $route:{
+        handler(to,from){
+          this.updateParams()
+          this.getShopList()
+        },
+        immediate:true
+      }
+      // $route: {
+      //   handler() { // 参数变化
+      //     this.updateParams()
+      //     this.getShopList()
+      //   },
+      //   immediate: true, // 初始化立即执行第一次
+      // }
+    },
+
+      
+        
+  methods:{
+    //删除属性条件
+    removeProp(index){
+      
+      this.options.props.splice(index,1)
+      this.getShopList()
+
+    },
+    //添加属性条件
+    addProp(prop){
+      // 判断数组中是否有prop
+      const {props} = this.options
+      if(props.includes(prop)) return
+      // 如果没有就push
+      props.push(prop)
+      this.getShopList()
+
+    },
+    removeTrademark(){
+      this.options.trademark=''
+      this.getShopList()
+    },
+    setTrademark(trademark){
+      if(trademark===this.options.trademark) return
+      this.options.trademark = trademark
+      this.getShopList()
+
+    },
+    //拿到query,和params参数,整理参数
+    updateParams(){
+        const {keyword} = this.$route.params
+        const {category1Id,category2Id,category3Id,categoryName} = this.$route.query
+        this.options={
+          ...this.options,
+          keyword,
+          category1Id
+          ,category2Id,
+          category3Id,
+          categoryName,
+       
+      }
+    },
+    //发送请求,获取数据
+    getShopList(){
+        this.$store.dispatch('getSearchList',this.options)
+    },
+    //删除分类条件
+    removeCategory(){
+      this.options.category1Id=''
+      this.options.category2Id=''
+      this.options.category3Id=''
+      this.options.categoryName=''
+      //重新发送请求
+      this.$router.replace({
+        name:'search',
+        params:this.$route.params
+      })
+    },
+    //删除params参数
+    removekeyword(){
+      this.options.keyword=''
+      this.$router.replace({
+        name:'search',
+        query:this.$route.query
+      }),
+      this.$bus.$emit('removeKeyword')
     }
+  }
 
   }
 </script>

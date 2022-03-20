@@ -190,7 +190,7 @@ export default {
        }
 
         // 隐藏一级列表
-      
+        this.isShowLeave()
       }
     }
   }

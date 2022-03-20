@@ -23,8 +23,9 @@ export default[
         },
         {
             name:'search',
-            path:'/Search/:keyWord?',
+            path:'/search/:keyword?',
             component:Search,
             props:true,  //只能映射pramas参数
         },
+
 ]

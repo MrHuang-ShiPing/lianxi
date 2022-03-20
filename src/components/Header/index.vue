@@ -40,7 +40,7 @@
               type="text"
               id="autocomplete"
               class="input-error input-xxlarge"
-              v-model="keyWord"
+              v-model="keyword"
             />
             <button class="sui-btn btn-xlarge btn-danger" @click="toSearch"  type="button">
               搜索
@@ -57,25 +57,61 @@ export default {
   name: "Header",
   data(){
     return{
-        keyWord:''
+        keyword:''
     }
   },
   methods:{
       toSearch(){
-        // this.$router.push(`/search/${this.keyWord}`)
-        const location = {
-          name:'search',
-          query:this.$route.query
+      // 编程式路由导航
+      // this.$router.push(`/search/${this.keyword}`)
+
+      const location = {
+        name: 'search',
+        query: this.$route.query // 将当前就有的query参数携带上
+      }
+      // 只有数据时, 才携带params参数
+      if (this.keyword) {
+        location.params = { // 路由必须配置name
+          keyword: this.keyword
         }
-        if(this.keyWord){
-          location.params = {
-            keyWord:this.keyWord
-          }
-        }
+        // location.query = {
+        //   keyword2: this.keyword.toUpperCase()
+        // }
+      }
+
+      /* 
+      router.push(location, onComplete?, onAbort?)
+      router.push(location).then(onComplete).catch(onAbort)
+      */
+
+      /* 
+      从其它页到搜索页: push()
+      从搜索到搜索页: replace()
+      */
+      if (this.$route.name === "search") { // 当前是搜索
+        this.$router.replace(location)
+      } else {
         this.$router.push(location)
+      }
+
+      // 解决重复跳转路由的错误:
+      // 方法一: 传入成功的回调函数函数
+      // console.log(this.$router.push(location, () => {}))
+      // 方法: catch处理错误的promise
+      // console.log(this.$router.push(location)).catch(() => {})
+
 
       }
+  },
+  mounted(){
+    this.$bus.$on('removeKeyword',()=>{
+      this.keyword=''
+    })
+  },
+  beforeDestroy(){
+    this.$bus.off('removeKeyword')
   }
+
 };
 </script>
 
